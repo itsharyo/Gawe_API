@@ -1,0 +1,313 @@
+import 'package:flutter/material.dart';
+
+class EmploymentHistoryScreen extends StatelessWidget {
+  const EmploymentHistoryScreen({super.key});
+
+  // Data dummy untuk Dropdown Bulan dan Tahun
+  final List<String> _months = const [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  final List<String> _years = const ['2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018'];
+
+  @override
+  Widget build(BuildContext context) {
+    // Definisi warna
+    final Color colorPrimaryButton = const Color(0xFF8D3CFF);
+    final Color colorPurpleText = const Color(0xFF6A26C4);
+    final Color colorIconBackground = const Color(0xFFEDE7F9);
+    final Color colorUnguMuda = const Color(0xFFF7F4FD);
+
+    // Kita return Container sebagai konten Bottom Sheet
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle (garis abu-abu di atas)
+              Center(
+                child: Container(
+                  width: 50,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // 2. HEADER (IKON DAN JUDUL)
+              Center(
+                child: Column(
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: colorIconBackground,
+                        borderRadius: BorderRadius.circular(50.0),
+                        border: Border.all(color: Colors.grey[200]!, width: 1),
+                      ),
+                      child: Icon(Icons.work_outline, // Ikon tas kerja
+                          color: colorPurpleText, size: 40),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Employment history",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // 3. FORM INPUTS
+              // Job Title
+              _buildFormLabel("Job title"),
+              _buildTextField("Job title"),
+              const SizedBox(height: 16),
+
+              // Company
+              _buildFormLabel("Company"),
+              _buildTextField("Company"),
+              const SizedBox(height: 16),
+
+              // Location
+              _buildFormLabel("Your location"),
+              _buildTextField("Town, county or country"),
+              const SizedBox(height: 16),
+
+              // Start Date
+              _buildFormLabel("Start"),
+              Row(
+                children: [
+                  Expanded(child: _buildMonthDropdown(context, 'January')),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildYearDropdown(context, '2022')),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // End Date
+              _buildFormLabel("End"),
+              Row(
+                children: [
+                  Expanded(child: _buildMonthDropdown(context, 'January')),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildYearDropdown(context, '2022')),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Position Details
+              _buildFormLabel("Position details"),
+              _buildDescriptionTextField(colorUnguMuda),
+              const SizedBox(height: 32),
+
+              // 4. TOMBOL-TOMBOL
+              _buildSaveButton(colorPrimaryButton, colorUnguMuda),
+              const SizedBox(height: 12),
+              _buildCancelButton(context, colorPrimaryButton), // Diperbarui untuk menerima context
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // --- WIDGET BANTUAN ---
+
+  // Widget Label Form
+  Widget _buildFormLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.black87,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  // Widget Input Text Field Standar
+  Widget _buildTextField(String hintText) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.grey[300]!, width: 1),
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey[400]),
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        ),
+      ),
+    );
+  }
+
+  // Widget Input Text Area (Position Details)
+  Widget _buildDescriptionTextField(Color colorUnguMuda) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.grey[300]!, width: 1),
+      ),
+      child: const TextField(
+        keyboardType: TextInputType.multiline,
+        minLines: 8,
+        maxLines: null,
+        decoration: InputDecoration(
+          hintText: "Position details",
+          hintStyle: TextStyle(color: Color(0xFF9E9E9E)),
+          border: InputBorder.none,
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        ),
+      ),
+    );
+  }
+  
+  // Widget Dropdown Bulan
+  Widget _buildMonthDropdown(BuildContext context, String selectedValue) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.grey[300]!, width: 1),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedValue,
+          isExpanded: true,
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey[600]),
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+            fontFamily: Theme.of(context).textTheme.bodyLarge?.fontFamily,
+          ),
+          items: _months.map((String month) {
+            return DropdownMenuItem<String>(
+              value: month,
+              child: Text(month),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            // Aksi saat bulan diubah (dalam aplikasi nyata, ini akan memicu setState)
+            print("Start Month changed to $newValue");
+          },
+        ),
+      ),
+    );
+  }
+
+  // Widget Dropdown Tahun
+  Widget _buildYearDropdown(BuildContext context, String selectedValue) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.grey[300]!, width: 1),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedValue,
+          isExpanded: true,
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey[600]),
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+            fontFamily: Theme.of(context).textTheme.bodyLarge?.fontFamily,
+          ),
+          items: _years.map((String year) {
+            return DropdownMenuItem<String>(
+              value: year,
+              child: Text(year),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            // Aksi saat tahun diubah (dalam aplikasi nyata, ini akan memicu setState)
+            print("Start Year changed to $newValue");
+          },
+        ),
+      ),
+    );
+  }
+  
+  // Tombol Save
+  Widget _buildSaveButton(Color colorPrimaryButton, Color colorUnguMuda) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: () {
+          print("Save Employment History pressed");
+        },
+        child: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16.0),
+          child: Text(
+            "Save",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: colorPrimaryButton,
+          backgroundColor: colorUnguMuda,
+          side: BorderSide(color: colorPrimaryButton, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Tombol Cancel (Diperbarui untuk menerima context)
+  Widget _buildCancelButton(BuildContext context, Color colorPrimaryButton) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          print("Cancel pressed");
+          Navigator.pop(context); // Tutup Bottom Sheet
+        },
+        child: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16.0),
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: colorPrimaryButton,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+      ),
+    );
+  }
+}
